@@ -21,10 +21,11 @@ Use cmake to build on Linux. After checkout, run these commands.
 ```
 sed -i 's;${CMAKE_INSTALL_FULL_LIBDIR};/usr/lib;' CMakeLists.txt
 mkdir build && cd build
-cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=/usr/lib ..
 make
 sudo make install
 ```
+You might need to adjust `CMAKE_INSTALL_LIBDIR` for your system.
 
 ### macOS
 Build flow is similar to that for Linux.
