@@ -9,6 +9,8 @@ set(PLUGIN_AUTHOR "Norihiro Kamae")
 # Replace `com.example.obs-plugin-template` with a unique Bundle ID for macOS releases
 # (used both in the installer and when submitting the installer for notarization)
 set(MACOS_BUNDLEID "net.nagater.obs-mute-filter")
+set(MACOS_PACKAGE_UUID "AC34BEA6-6AAB-4CAE-AE0F-222F49F0503A")
+set(MACOS_INSTALLER_UUID "4F2A848B-08BE-4EED-AD7F-824BD7B97A8A")
 set(ID_PREFIX "net.nagater.obs-mute-filter.")
 
 # Replace `me@contoso.com` with the maintainer email address you want to put in Linux packages
