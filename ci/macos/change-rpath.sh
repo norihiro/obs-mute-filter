@@ -36,6 +36,7 @@ function copy_local_dylib
 		fi
 		install_name_tool -change "$dylib" "@loader_path/../$libdir/$b" $1
 	done
+	rm -f "$t"
 }
 
 function change_obs27_libs
