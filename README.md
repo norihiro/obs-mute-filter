@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This plugin to mute audio of a source.
+This plugin will discard audio of a source.
 
 Even though a user muted a source in the mixer of OBS Studio,
 the source sometimes triggers OBS Studio to add more audio buffers.
@@ -10,6 +10,12 @@ the source sometimes triggers OBS Studio to add more audio buffers.
 adding 21 milliseconds of audio buffering, total audio buffering is now 85 milliseconds (source: cam3)
 ```
 It should not cause any problem but it's better to avoid unnecessary process.
+
+This plugin provides two filter types;
+1. Discard Audio --
+   This filter will just discard all audio data from the source.
+2. Discard Audio by UI --
+   This filter will discard audio data from the source while the source is muted in the mixer.
 
 ## Properties
 

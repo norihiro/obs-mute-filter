@@ -4,7 +4,7 @@
 static const char *get_name(void *type_data)
 {
 	UNUSED_PARAMETER(type_data);
-	return obs_module_text("Mute Audio");
+	return obs_module_text("Mute.Name");
 }
 
 static void *create(obs_data_t *settings, obs_source_t *source)
