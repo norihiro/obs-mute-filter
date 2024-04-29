@@ -31,6 +31,7 @@ configure_file(
 set(PLUGIN_SOURCES
 	src/plugin-main.c
 	src/mute-filter.c
+	src/mute-filter-by-ui.c
 )
 
 add_library(${PROJECT_NAME} MODULE ${PLUGIN_SOURCES})

@@ -25,10 +25,12 @@ OBS_DECLARE_MODULE()
 OBS_MODULE_USE_DEFAULT_LOCALE(PLUGIN_NAME, "en-US")
 
 extern const struct obs_source_info mute_filter_info;
+extern const struct obs_source_info mute_filter_by_ui_info;
 
 bool obs_module_load(void)
 {
 	obs_register_source(&mute_filter_info);
+	obs_register_source(&mute_filter_by_ui_info);
 	blog(LOG_INFO, "plugin loaded (version %s)", PLUGIN_VERSION);
 	return true;
 }
