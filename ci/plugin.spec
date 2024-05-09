@@ -1,17 +1,15 @@
 Name: @PLUGIN_NAME_FEDORA@
 Version: @VERSION@
 Release: @RELEASE@%{?dist}
-Summary: Color monitor plugin for OBS Studio
+Summary: Discard audio plugin for OBS Studio
 License: GPLv2+
 
 Source0: %{name}-%{version}.tar.bz2
 BuildRequires: cmake, gcc, gcc-c++
 BuildRequires: obs-studio-devel
-Obsoletes: @PLUGIN_NAME@ < %{version}
 
 %description
-Color monitor plugin contains vectorscope, waveform, histogram, zebra, and
-false color to help color correction.
+A plugin for OBS Studio to discard audio for a source.
 
 %prep
 %autosetup -p1
