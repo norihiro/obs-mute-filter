@@ -11,6 +11,7 @@ set(PLUGIN_AUTHOR "Norihiro Kamae")
 set(MACOS_BUNDLEID "net.nagater.obs-mute-filter")
 set(MACOS_PACKAGE_UUID "AC34BEA6-6AAB-4CAE-AE0F-222F49F0503A")
 set(MACOS_INSTALLER_UUID "4F2A848B-08BE-4EED-AD7F-824BD7B97A8A")
+set(PLUGIN_URL "https://obsproject.com/forum/resources/mute-filter.1478/")
 set(ID_PREFIX "net.nagater.obs-mute-filter.")
 
 # Replace `me@contoso.com` with the maintainer email address you want to put in Linux packages
