@@ -1,4 +1,4 @@
-# OBS Mute Filter Plugin
+# Mute Filter Plugin for OBS Studio
 
 ## Introduction
 
