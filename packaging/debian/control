@@ -1,0 +1,20 @@
+Source: mute-filter-for-obs
+Section: video
+Priority: optional
+Maintainer: Norihiro Kamae <norihiro-ppa-plugins-for-obs-studio@nagater.net>
+Rules-Requires-Root: no
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake,
+ obs-studio,
+ libsimde-dev
+Standards-Version: 4.6.0
+Homepage: https://github.com/norihiro/obs-mute-filter
+
+Package: mute-filter-for-obs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Filter plugin to discard audio
+ Even though a user muted a source in the mixer of OBS Studio,
+ the source sometimes triggers OBS Studio to add more audio buffers.
+ This filter discard audio to avoid unnecessary audio processing.
