@@ -1,4 +1,5 @@
 #include <obs-module.h>
+#include <util/threading.h>
 #include "plugin-macros.generated.h"
 
 #define TS_SMOOTHING_THRESHOLD 70000000ULL
@@ -33,7 +34,7 @@ static void *create(obs_data_t *settings, obs_source_t *source)
 static void mute_cb(void *data, calldata_t *cd)
 {
 	struct mute_by_ui_s *m = data;
-	m->parent_muted = calldata_bool(cd, "muted");
+	os_atomic_store_bool(&m->parent_muted, calldata_bool(cd, "muted"));
 }
 
 static void configure_callback(struct mute_by_ui_s *m)
@@ -45,7 +46,7 @@ static void configure_callback(struct mute_by_ui_s *m)
 	signal_handler_t *sh = obs_source_get_signal_handler(parent);
 	signal_handler_connect(sh, "mute", mute_cb, m);
 
-	m->parent_muted = obs_source_muted(parent);
+	os_atomic_store_bool(&m->parent_muted, obs_source_muted(parent));
 	m->weak_parent = obs_source_get_weak_source(parent);
 
 	m->configured = true;
@@ -73,7 +74,7 @@ static struct obs_audio_data *mute_filter_audio(void *data, struct obs_audio_dat
 	if (!m->configured)
 		configure_callback(m);
 
-	if (m->parent_muted) {
+	if (os_atomic_load_bool(&m->parent_muted)) {
 		m->last_muted = true;
 		return NULL;
 	}
