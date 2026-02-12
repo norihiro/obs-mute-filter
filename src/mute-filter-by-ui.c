@@ -12,7 +12,7 @@ struct mute_by_ui_s
 	bool configured;
 	volatile bool parent_muted;
 	bool last_muted;
-	uint64_t last_audio_ns;
+	uint64_t next_audio_ns;
 };
 
 static const char *get_name(void *type_data)
@@ -79,12 +79,15 @@ static struct obs_audio_data *mute_filter_audio(void *data, struct obs_audio_dat
 		return NULL;
 	}
 
-	if (m->last_muted && audio->timestamp - m->last_audio_ns < TS_SMOOTHING_THRESHOLD) {
+	if (m->last_muted && audio->timestamp < m->next_audio_ns + TS_SMOOTHING_THRESHOLD) {
 		return NULL;
 	}
 
+	struct obs_audio_info oai;
+	obs_get_audio_info(&oai);
+
 	m->last_muted = false;
-	m->last_audio_ns = audio->timestamp;
+	m->next_audio_ns = audio->timestamp + audio_frames_to_ns(oai.samples_per_sec, audio->frames);
 	return audio;
 }
 
