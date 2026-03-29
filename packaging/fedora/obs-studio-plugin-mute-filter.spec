@@ -1,4 +1,4 @@
-Name: @PLUGIN_NAME_FEDORA@
+Name: obs-studio-plugin-mute-filter
 Version: @VERSION@
 Release: @RELEASE@%{?dist}
 Summary: Discard audio plugin for OBS Studio
@@ -15,12 +15,13 @@ A plugin for OBS Studio to discard audio for a source.
 %autosetup -p1
 
 %build
-%{cmake} -DLINUX_PORTABLE=OFF -DLINUX_RPATH=OFF
+%{cmake} -DINSTALL_LICENSE_FILES:BOOL=OFF
 %{cmake_build}
 
 %install
 %{cmake_install}
 
 %files
-%{_libdir}/obs-plugins/@PLUGIN_NAME@.so
-%{_datadir}/obs/obs-plugins/@PLUGIN_NAME@/
+%{_libdir}/obs-plugins/*.so
+%{_datadir}/obs/obs-plugins/*/
+%license LICENSE

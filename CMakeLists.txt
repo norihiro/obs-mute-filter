@@ -2,22 +2,18 @@ cmake_minimum_required(VERSION 3.12)
 
 project(mute-filter VERSION 0.3.0)
 
-# Replace `Your Name Here` with the name (yours or your organization's) you want
-# to see as the author of the plugin (in the plugin's metadata itself and in the installers)
 set(PLUGIN_AUTHOR "Norihiro Kamae")
 
-# Replace `com.example.obs-plugin-template` with a unique Bundle ID for macOS releases
-# (used both in the installer and when submitting the installer for notarization)
+set(PLUGIN_URL "https://obsproject.com/forum/resources/mute-filter.1478/")
+set(ID_PREFIX "net.nagater.obs-mute-filter.")
 set(MACOS_BUNDLEID "net.nagater.obs-mute-filter")
 set(MACOS_PACKAGE_UUID "AC34BEA6-6AAB-4CAE-AE0F-222F49F0503A")
 set(MACOS_INSTALLER_UUID "4F2A848B-08BE-4EED-AD7F-824BD7B97A8A")
-set(PLUGIN_URL "https://obsproject.com/forum/resources/mute-filter.1478/")
-set(ID_PREFIX "net.nagater.obs-mute-filter.")
+set(WIN_INSTALLER_UUID   "28F25281-714C-4BFF-A9A9-009BCC3074BB")
 
-# Replace `me@contoso.com` with the maintainer email address you want to put in Linux packages
 set(LINUX_MAINTAINER_EMAIL "norihiro@nagater.net")
 
-# TAKE NOTE: No need to edit things past this point
+option(ENABLE_COVERAGE "Enable coverage option for GCC" OFF)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
 	find_package(libobs REQUIRED)
@@ -41,7 +37,10 @@ target_link_libraries(${PROJECT_NAME}
 	OBS::libobs
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(${PROJECT_NAME}
+	PRIVATE
+	${CMAKE_CURRENT_BINARY_DIR}
+)
 
 if(OS_WINDOWS)
 	# Enable Multicore Builds and disable FH4 (to not depend on VCRUNTIME140_1.DLL when building with VS2019)
@@ -50,24 +49,49 @@ if(OS_WINDOWS)
 	endif()
 
 	target_link_libraries(${PROJECT_NAME} OBS::w32-pthreads)
+
+	set(LICENSE_DESTINATION "${PROJECT_NAME}/data")
 endif()
 
 if(OS_LINUX)
 	target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra)
+	target_link_options(${PROJECT_NAME} PRIVATE -Wl,-z,defs)
+
+	set(LICENSE_DESTINATION ${CMAKE_INSTALL_DOCDIR})
+
+	if(ENABLE_COVERAGE)
+		target_compile_options(${PROJECT_NAME} PRIVATE -coverage -fprofile-update=atomic)
+		target_link_options(${PROJECT_NAME} PRIVATE -coverage)
+	endif()
 endif()
 
-if(APPLE)
+if(OS_MACOS)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -fvisibility=default")
+
+	set(LICENSE_DESTINATION "${PROJECT_NAME}.plugin/Contents/Resources")
 
 	set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
 	set(MACOSX_PLUGIN_GUI_IDENTIFIER "${MACOS_BUNDLEID}")
 	set(MACOSX_PLUGIN_BUNDLE_VERSION "${PROJECT_VERSION}")
 	set(MACOSX_PLUGIN_SHORT_VERSION_STRING "1")
+
+	if(ENABLE_COVERAGE)
+		target_compile_options(${PROJECT_NAME} PRIVATE -coverage)
+		target_link_options(${PROJECT_NAME} PRIVATE --coverage)
+	endif()
 endif()
+
+file(GENERATE OUTPUT .gitignore CONTENT "*\n")
 
 setup_plugin_target(${PROJECT_NAME})
 
-configure_file(installer/installer-macOS.pkgproj.in installer-macOS.generated.pkgproj)
+option(INSTALL_LICENSE_FILES "Install license files" ON)
+if(INSTALL_LICENSE_FILES)
+	install(FILES
+		LICENSE
+		DESTINATION ${LICENSE_DESTINATION}
+	)
+endif()
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
 	configure_file(
@@ -79,9 +103,17 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
 		ci/ci_includes.sh.in
 		ci/ci_includes.generated.sh
 	)
-
 	configure_file(
 		ci/ci_includes.cmd.in
 		ci/ci_includes.generated.cmd
+	)
+
+	configure_file(
+		installer/installer-macOS.pkgproj.in
+		installer-macOS.generated.pkgproj
+	)
+	configure_file(
+		installer/installer-macOS-post.sh.in
+		installer-macOS-post.generated.sh
 	)
 endif()
